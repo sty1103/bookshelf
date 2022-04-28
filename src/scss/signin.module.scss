@@ -1,0 +1,73 @@
+@import './common.scss';
+
+.inner {
+  width: 760px;
+  height: 500px;
+}
+
+.inner__left {
+  height: 500px;
+  overflow: hidden;
+}
+
+.inner__left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.inner__right {
+  .content {
+    @include center;
+    height: 100%;
+    flex-direction: column;
+    background: #eee;
+
+    font: {
+      size: 1.2rem;
+      weight: bold;
+    }
+
+    & > :first-child {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    & > :nth-child(2) {
+      margin-bottom: 15px;
+    }
+
+    hr {
+      width: 200px;
+      height: 6px;
+      background: linear-gradient(90deg,#803b32,#ddb49b);
+    }
+    
+    .form {
+      padding: 50px;
+      padding-bottom: 0;
+      font-size: .8rem;
+
+      span {
+        color: red;
+      }
+
+      input {
+        width: calc(100% - 20px);
+        height: 25px;
+        padding: 3px 10px;
+        border: 1px solid #ddd;
+
+        margin: {
+          top: 8px;
+          bottom: 20px;
+        }
+      }
+
+      button {
+        width: 100%;
+        margin-top: 15px;
+      }
+    }
+  }
+}
