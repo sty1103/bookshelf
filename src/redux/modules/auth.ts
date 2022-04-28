@@ -1,15 +1,9 @@
-import { takeEvery, put, call } from 'redux-saga/effects';
+import { takeEvery, put, call, select } from 'redux-saga/effects';
 import { Action, createActions, handleActions } from 'redux-actions';
-import { LoginReqType } from '../../types';
+import { LoginReqType, AuthState } from '../../types';
 import UserService from '../../services/UserService';
 import TokenService from '../../services/TokenService';
-
-// Types
-interface AuthState {
-  token: string | null,
-  loading: boolean,
-  error: Error | null
-}
+import { RootState } from '../../types';
 
 const initialState: AuthState = {
   token: null,
@@ -30,6 +24,7 @@ const reducer = handleActions<AuthState, string>({
     error: null
   }),
   SUCCESS: (state, action) => ({
+    ...state,
     token: action.payload,
     loading: false,
     error: null
@@ -46,19 +41,28 @@ export default reducer;
 // Saga
 export const { login, logout } = createActions('LOGIN', 'LOGOUT', { prefix });
 
-function* loginSaga(action: Action<LoginReqType>) {
+function* loginSaga(action: any) {
   try {
     yield put(pending());
-    const token: string = yield call(UserService.login, action.payload);
+    // const token: string = yield call(UserService.login, action.payload);
+    const token: string = 'token-blarblar';
     TokenService.set(token);
     yield put(success(token));
+    yield call(action.payload.reqData.navigate, '/');
   } catch( error: any ) {
     yield put(fail(new Error(error?.response?.data.error || 'UNKNOWN_ERROR')));
   }
 }
 
-function * logoutSaga() {
-
+function* logoutSaga() {
+  try {
+    yield put(pending());
+    const token: string = yield select((state) => state.auth.token);
+    // yield call(UserService.logout(), token);
+  } finally {
+    yield TokenService.remove();
+    yield put(success(null));
+  }
 }
 
 export function* authSaga() {
